@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draggable Div Element</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="wrapper">
+        <header>Draggable Div</header>
+        <div class="content">
+            <div class="icon"> <i class="bx bx-move"></i></div>
+            <div class="title">Draggable Div</div>
+            <p>This is a draggable div which is created using HTML CSS and Javascript.You can move this div anywhere on the document or page.</p>
+        </div>
+    </div>
+
+    <script>
+        const wrapper = document.querySelector(".wrapper");
+        const header = wrapper.querySelector("header");
+        const resizeHandle = document.createElement("div");
+        resizeHandle.classList.add("resize-handle");
+
+        let active = false;
+        let activeDrag = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+
+        function dragStart(e) {
+            header.classList.add("active");
+                  console.log(e.target)
+                if (e.target === header) {
+
+                    activeDrag = true;
+                    initialX = e.clientX 
+                    initialY = e.clientY 
+                }
+            }
+
+            function dragEnd() {
+                activeDrag = false;
+            }
+
+    function drag(e) {
+        if (activeDrag) {
+            e.preventDefault();
+
+            currentX = e.clientX - initialX;
+            currentY = e.clientY - initialY;
+
+            offsetX = currentX;
+            offsetY = currentY;
+
+            wrapper.style.transform = `translate(${currentX}px, ${currentY}px)`;
+        }
+    }
+
+
+        // function onDrag({movementX,movementY}){
+        //     let getStyle = window.getComputedStyle(wrapper);
+        //     let left = parseInt(getStyle.left);
+        //     let top =parseInt( getStyle.top);
+        //     wrapper.style.left = `${left + movementX}px`;
+        //     wrapper.style.top = `${top + movementY}px`;
+        // }
+
+        // header.addEventListener("mousedown",() =>{
+        //     header.classList.add("active");
+        //     header.addEventListener("mousemove" , onDrag);
+        // })
+        // document.addEventListener("mouseup",() =>{
+        //     header.classList.remove("active");
+        //     header.removeEventListener("mousemove" , onDrag);
+        // })
+
+        // -----resize Handle------
+        // Variables
+     
+         
+        function addResizeHandle(){
+            wrapper.appendChild(resizeHandle);
+            resizeHandle.addEventListener('mousedown',resizeStart);
+            window.addEventListener('mouseup',resizeEnd);
+        }
+
+       function removeResizeHandle(){
+        wrapper.removeChild(resizeHandle);
+        resizeHandle.removeEventListener('mousedown',resizeStart);
+        window.removeEventListener('mouseup',resizeEnd);
+       }
+
+       function resizeStart(e){
+            active = true;
+            initialX = e.clientX;
+            initialY = e.clientY;
+            window.addEventListener('mousemove',resize);
+        }
+
+        function resizeEnd(){
+            active = false;
+            window.removeEventListener('mousemove', resize);
+        }
+       function resize(e){
+         if(active){
+            e.preventDefault();
+            const currentWidth = wrapper.offsetWidth; 
+            const currentHeight = wrapper.offsetHeight; 
+            const newWidth = currentWidth + (e.clientX -initialX);
+            const newHeight = currentHeight + (e.clientY - initialY);
+            wrapper.style.width = `${newWidth}px`;
+            wrapper.style.height = `${newHeight}px`;
+
+            initialX = e.clientX;
+            initialY = e.clientY;
+         }
+          
+          
+        // let getStyle = window.getComputedStyle(wrapper);
+        // let width =parseInt(getStyle.width);
+        // let height = parseInt(getStyle.height);
+     
+       }
+
+        header.addEventListener('mousedown', dragStart);
+        window.addEventListener('mouseup', dragEnd);
+        window.addEventListener('mousemove', drag);
+        wrapper.addEventListener('mouseenter', addResizeHandle);
+        wrapper.addEventListener('mouseleave', removeResizeHandle);
+
+    </script>
+</body>
+</html>
